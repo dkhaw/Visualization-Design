@@ -1,0 +1,305 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <style type="text/css">
+          p {
+            width: 1000px;
+            text-align: justify;
+          }
+          div, h3 {
+            align: center;
+          }
+        </style>
+    </head>
+
+    <body>
+        <div align='center'>
+        <button type="button" class="btn btn-primary btn-lg" id='btn1' onclick="one()">One</button>
+        <button type="button" class="btn btn-primary btn-lg" id='btn2' onclick="two()">Two</button>
+        <button type="button" class="btn btn-primary btn-lg" id='btn3' onclick="three()">Three</button>
+        </div>
+        <div><h3 id='tOne' style="display: none;" align='center'>Which antibiotic has the lowest MIC for each type of bacteria?</h3></div>
+        <div><h3 id='tTwo' style="display: none;" align='center'>How do MICs for Gram positive bacteria compare with MICs for Gram negative bacteria?</h3></div>
+        <div><h3 id='tThree' style="display: none;" align='center'>Is there a correlation between the three antibiotics?</h3></div>
+        <div id="myDiv" align='center'></div>
+        <br />
+        <div id='pOne' style="display: none;" align="center"><p>With three different antibiotics available in this dataset, the most obvious thing that one may be interested in is to figure out which antibiotic is the strongest against each strain of bacteria. If we define strength of an antibiotic as having a lower MIC, then this becomes a manageable task with the data that we are given. The first thing we want to do is make sure that we are able to see data for each bacteria, so we align these along the x-axis. I put these in alphabetical order so that viewers can easily navigate to the bacteria they are interested in investigating. 
+        <br />
+        <br />
+        We also want to make sure that we include a y-axis capable of fitting our entire range but also capable of letting us perceive the differences in the data. Because we have some major outliers in the Penicillin data, I chose to use a logarithmic scale on the y-axis to encompass all of our data but also make it intuitive for viewers to make comparisons. This makes it possible to perceive tiny differences between antibiotics, such as the .006 difference between Streptomycin and Neomycin for Brucella anthracis, as well as the magnitude of the immense Penicillin outliers. 
+        <br />
+        <br />
+        I used color to encode the three different antibiotics and established a legend to inform viewers. I made sure to use high contrast with my color selection to make them easily distinguishable. I believe a grouped bar chart was the best way to display the data to answer the question. It utilizes position along a common scale as the primary elementary task for comparing data, which is the most accurate of the tasks. Further, as there are only three different types of antibiotics, the color encoding is easy for viewers to grasp quickly. </p></div>
+
+        <div id='pTwo' style="display: none;" align="center"><p>To answer this question, I first had to divide up the data into two sets: Gram positive and Gram negative. We do not care about which antibiotic is used in this case as we only wish to compare MICs based on their Gram staining. I chose dots on a scatter plot to represent each data point rather than adding up the values and using bars. This gives viewers a better look at the actual underlying data and still only requires the use of the elementary task of position along a common scale. For my markers, I colored them green and red, which are the logical choices for positive and negative data. 
+        <br />
+        <br />
+        I went with a logarithmic scale for my y-axis as it allows me to encompass all of my data on the graph but still allows viewers to perceive the minute differences in the data. On my x-axis, I showed the names of each bacteria and split them into positive and negative sections. This makes it much easier to grasp each section as a whole and perceive the contrast between them. With them split like this, it is plain to see that Gram Positive tends to have lower MICs than Gram Negative overall.
+        <br />
+        <br />
+        I kept the dots fairly small in my graph because I felt it was important that they be easily distinguishable from one another. The smaller dots also make it easier to notice the differences between the positive and negative sections. Gram staining is generally used as a first step in classifying bacteria, but it is interesting to see that it also seems to hold some correlation over the MIC values for each bacteria as well.  
+        </p></div>
+
+        <div id='pThree' style="display: none;" align="center"><p>Some viewers may want to know if there is a positive or negative correlation between the three different antibiotics in the data set. In other words, do MICs for each antibiotic rise and fall together? This would imply that certain bacteria are tougher and more resistant to bacteria. To answer this question, I constructed a line graph that displays all three antibiotics' MICs plotted against the various bacteria. I choose a line graph because that makes it easiest to see trends in the data and pick out slopes. Slopes are what we really care about here as we are looking for correlations between the antibiotics.
+        <br />
+        <br />
+        Direction is the most important perceptual task used in this graph. What we really care about is whether or not the antibiotics’ MICs are increasing and decreasing together. Position along a common scale is also used as a secondary task. I maintained my logarithmic y-axis as it gives viewers the best way to perceive all of the data while also understanding its differences. I left the ordering of my bacteria in alphabetical order as their order is insignificant to answering this question. Further, it would be biased for me to order them based on a single antibiotic.
+        <br />
+        <br />
+        For color, I used three highly contrasting colors for my antibiotics. I wanted to maintain the same color selection as in my first graph so as to not confuse my viewers. For my data points on the graph, I used both lines and markers to increase visibility. The focus of the graph is on the relationship between the antibiotics. With the indicators I have laid out, a positive correlation between all three antibiotics certainly appears evident.</p></div>
+
+        <script>
+            function one() {
+              document.getElementById('btn1').disabled=true;
+              document.getElementById('btn2').disabled=false;
+              document.getElementById('btn3').disabled=false;
+
+              document.getElementById('pTwo').style.display = 'none';
+              document.getElementById('pThree').style.display = 'none';
+              document.getElementById('tTwo').style.display = 'none';
+              document.getElementById('tThree').style.display = 'none';
+
+              document.getElementById('tOne').style.display = 'block';
+              Plotly.d3.csv("https://raw.githubusercontent.com/dkhaw/Visualization-Design/master/antibiotics_data.csv", function(data){ processData(data) } );
+              document.getElementById('pOne').style.display = 'block';
+            }
+
+            function two() {
+              document.getElementById('btn1').disabled=false;
+              document.getElementById('btn2').disabled=true;
+              document.getElementById('btn3').disabled=false;
+
+              document.getElementById('pOne').style.display = 'none';
+              document.getElementById('pThree').style.display = 'none';
+              document.getElementById('tOne').style.display = 'none';
+              document.getElementById('tThree').style.display = 'none';
+
+              document.getElementById('tTwo').style.display = 'block';
+              Plotly.d3.csv("https://raw.githubusercontent.com/dkhaw/Visualization-Design/master/antibiotics_data.csv", function(data){ processData2(data) } );
+              document.getElementById('pTwo').style.display = 'block';
+            }
+
+            function three() {
+              document.getElementById('btn1').disabled=false;
+              document.getElementById('btn2').disabled=false;
+              document.getElementById('btn3').disabled=true;
+
+              document.getElementById('pOne').style.display = 'none';
+              document.getElementById('pTwo').style.display = 'none';
+              document.getElementById('tOne').style.display = 'none';
+              document.getElementById('tTwo').style.display = 'none';
+
+              document.getElementById('tThree').style.display = 'block';
+              Plotly.d3.csv("https://raw.githubusercontent.com/dkhaw/Visualization-Design/master/antibiotics_data.csv", function(data){ processData3(data) } );
+              document.getElementById('pThree').style.display = 'block';
+            }
+
+            function processData(allRows) {
+              var Bacteria = [], Penicillin = [], Streptomycin = [], Neomycin = [], GramStaining = [];
+              for (var i = 0; i < allRows.length; i++) {
+                row = allRows[i];
+                Bacteria.push( row['Bacteria '] );
+                Penicillin.push( row['Penicilin'] );
+                Streptomycin.push( row['Streptomycin '] );
+                Neomycin.push( row['Neomycin'] );
+                GramStaining.push( row['Gram Staining '] );
+              }
+              barChart(Bacteria, Penicillin, Streptomycin, Neomycin);
+            }
+
+            function processData2(allRows) {
+              var Bacteria = [], Penicillin = [], Streptomycin = [], Neomycin = [], 
+              nBacteria = [], nPenicillin = [], nStreptomycin = [], nNeomycin = [];
+              for (var i = 0; i < allRows.length; i++) {
+                row = allRows[i];
+                if (row['Gram Staining '].localeCompare('positive') == 0) {
+                  Penicillin.push( row['Penicilin'] );
+                  Streptomycin.push( row['Streptomycin '] );
+                  Neomycin.push( row['Neomycin'] );
+                  Bacteria.push( row['Bacteria '] );
+                } else {
+                  nPenicillin.push( row['Penicilin'] );
+                  nStreptomycin.push( row['Streptomycin '] );
+                  nNeomycin.push( row['Neomycin'] );
+                  nBacteria.push( row['Bacteria '] );
+                }
+              }
+              scatter(Bacteria, Penicillin, Streptomycin, Neomycin, 
+                nBacteria, nPenicillin, nStreptomycin, nNeomycin);
+            }
+
+            function processData3(allRows) {
+              var Bacteria = [], Penicillin = [], Streptomycin = [], Neomycin = [], GramStaining = [];
+              for (var i = 0; i < allRows.length; i++) {
+                row = allRows[i];
+                Bacteria.push( row['Bacteria '] );
+                Penicillin.push( row['Penicilin'] );
+                Streptomycin.push( row['Streptomycin '] );
+                Neomycin.push( row['Neomycin'] );
+                GramStaining.push( row['Gram Staining '] );
+              }
+              lineGraph(Bacteria, Penicillin, Streptomycin, Neomycin);
+            }
+
+            function barChart(Bacteria, Penicillin, Streptomycin, Neomycin){
+              var plotDiv = document.getElementById("plot");
+              var pen = { 
+                x: Bacteria, y: Penicillin,
+                name: 'Penicillin',
+                type: 'bar'
+              }
+              var str = { 
+                x: Bacteria, y: Streptomycin,
+                name: 'Streptomycin',
+                type: 'bar', line: {
+                color: "rgb(44, 160, 44)"
+                }   
+              }
+              var neo = { 
+                x: Bacteria, y: Neomycin,
+                name: 'Neomycin', 
+                type: 'bar', line: {
+                color: "rgb(255, 127, 14)" 
+                }
+              }
+              var data = [pen, str, neo];
+              var layout = {
+                title: 'Antiobitic MICs for Different Bacteria',
+                autosize: false,
+                width: 1000,
+                height: 500,
+                xaxis: {
+                  type: 'category'
+                },
+                yaxis: {
+                  title: 'MIC',
+                  type: 'log',
+                  autorange: true
+                }, 
+                barmode: 'group',
+                bargap: 0.2,
+                bargroupgap: 0.1
+              }
+              Plotly.newPlot('myDiv', data, layout, {staticPlot: true});
+            };
+
+            function scatter(Bacteria, Penicillin, Streptomycin, Neomycin, nBacteria, 
+              nPenicillin, nStreptomycin, nNeomycin){
+              var pen = { 
+                x: Bacteria, y: Penicillin,
+                showlegend: false,
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(20, 184, 23)" 
+                }
+              }
+              var str = { 
+                x: Bacteria, y: Streptomycin,
+                showlegend: false,
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(20, 184, 23)" 
+                }
+              }
+              var neo = { 
+                x: Bacteria, y: Neomycin,
+                name: 'Gram Positive', 
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(20, 184, 23)" 
+                }
+              }
+              var npen = { 
+                x: nBacteria, y: nPenicillin,
+                showlegend: false,
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(237, 5, 5)" 
+                }
+              }
+              var nstr = { 
+                x: nBacteria, y: nStreptomycin,
+                showlegend: false,
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(237, 5, 5)" 
+                }
+              }
+              var nneo = { 
+                x: nBacteria, y: nNeomycin,
+                name: 'Gram Negative', 
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                color: "rgb(237, 5, 5)" 
+                }
+              }
+              var data = [pen, str, neo, npen, nstr, nneo];
+              var layout = {
+                title: 'Antiobitic MICs for Gram Positive & Gram Negative Bacteria',
+                autosize: false,
+                width: 1000,
+                height: 500,
+                xaxis: {
+                  type: 'category'
+                },
+                yaxis: {
+                  title: 'MIC',
+                  type: 'log',
+                  autorange: true
+                }, 
+              }
+              Plotly.newPlot('myDiv', data, layout, {staticPlot: true});
+            }
+
+            function lineGraph(Bacteria, Penicillin, Streptomycin, Neomycin){
+              var plotDiv = document.getElementById("plot");
+              var pen = { 
+                x: Bacteria, y: Penicillin,
+                name: 'Penicillin',
+                mode: 'lines+markers'
+              }
+              var str = { 
+                x: Bacteria, y: Streptomycin,
+                name: 'Streptomycin',
+                mode: 'lines+markers', line: {
+                color: "rgb(44, 160, 44)"
+                }   
+              }
+              var neo = { 
+                x: Bacteria, y: Neomycin,
+                name: 'Neomycin', 
+                mode: 'lines+markers', line: {
+                color: "rgb(255, 127, 14)" 
+                }
+              }
+              var data = [pen, str, neo];
+              var layout = {
+                title: 'Relationship Between Antiobitic MICs and Bacteria',
+                autosize: false,
+                width: 1000,
+                height: 500,
+                xaxis: {
+                  type: 'category',
+                  domain: []
+                },
+                yaxis: {
+                  title: 'MIC',
+                  type: 'log',
+                  autorange: true
+                }, 
+                barmode: 'group',
+                bargap: 0.2,
+                bargroupgap: 0.1
+              }
+              Plotly.newPlot('myDiv', data, layout, {staticPlot: true});
+            };
+        </script>
+    </body>
+</html>
